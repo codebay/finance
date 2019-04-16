@@ -8,3 +8,5 @@ erl_crash.dump
 finance-*.tar
 /.elixir_ls/
 .idea/
+finance.iml
+
