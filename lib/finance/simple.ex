@@ -27,13 +27,11 @@ defmodule Finance.Simple do
   """
   def pv(pmt, i, n, fv \\ 0, type \\ false)
 
-  def pv(pmt, _i = 0, n, fv, _type) do
+  def pv(pmt, _i = 0, n, fv, _type), do:
     -(pmt * n + fv)
-  end
 
-  def pv(pmt, i, n, fv, type) when is_boolean(type) do
+  def pv(pmt, i, n, fv, type) when is_boolean(type), do:
     -(pmt * (1.0 + ((type && i) || 0.0)) * pvifa(i, n) + fv * pvif(i, n))
-  end
 
   @doc """
   Future Value for regular fixed payments.
@@ -55,13 +53,11 @@ defmodule Finance.Simple do
   """
   def fv(pv, pmt, i, n, type \\ false)
 
-  def fv(pv, pmt, _i = 0, n, _type) do
+  def fv(pv, pmt, _i = 0, n, _type), do:
     -(pmt * n + pv)
-  end
 
-  def fv(pv, pmt, i, n, type) when is_boolean(type) do
+  def fv(pv, pmt, i, n, type) when is_boolean(type), do:
     -(pmt * (1.0 + ((type && i) || 0.0)) * fvifa(i, n) + pv * fvif(i, n))
-  end
 
   @doc """
   Payment aganist the loan principal plus interest
@@ -89,13 +85,11 @@ defmodule Finance.Simple do
   """
   def pmt(pv, i, n, fv \\ 0, type \\ false)
 
-  def pmt(pv, _i = 0, n, fv, _type) do
+  def pmt(pv, _i = 0, n, fv, _type), do:
     -(fv + pv) / n
-  end
 
-  def pmt(pv, i, n, fv, type) when is_boolean(type) do
+  def pmt(pv, i, n, fv, type) when is_boolean(type), do:
     -(fv + pv * fvif(i, n)) / ((1.0 + ((type && i) || 0.0)) * fvifa(i, n))
-  end
 
   @doc """
   Number of payment periods
@@ -111,9 +105,8 @@ defmodule Finance.Simple do
   """
   def nper(pv, pmt, i, fv \\ 0, type \\ false)
 
-  def nper(pv, pmt, _i = 0, fv, _type) do
+  def nper(pv, pmt, _i = 0, fv, _type), do:
     -(pv + fv) / pmt
-  end
 
   def nper(pv, pmt, i, fv, type) when is_boolean(type) do
     fx = pmt * (1.0 + ((type && i) || 0.0)) / i
@@ -139,19 +132,15 @@ defmodule Finance.Simple do
     )
   end
 
-  defp pvifa(i, n) do
+  defp pvifa(i, n), do:
     (:math.pow(1.0 + i, n) - 1.0) / (i * :math.pow(1.0 + i, n))
-  end
 
-  defp pvif(i, n) do
+  defp pvif(i, n), do:
     1.0 / :math.pow(1.0 + i, n)
-  end
 
-  defp fvifa(i, n) do
+  defp fvifa(i, n), do:
     (:math.pow(1.0 + i, n) - 1.0) / i
-  end
 
-  defp fvif(i, n) do
+  defp fvif(i, n), do:
     :math.pow(1.0 + i, n)
-  end
 end

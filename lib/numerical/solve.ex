@@ -8,7 +8,12 @@ defmodule Finance.Numerical do
   net present value, using the bisection method to move in close to the root, and
   then the Newton Raphson method for rapid convergence.
   """
-  def solve(f, fd, guess, tol \\ 1.0e-12, niter1 \\ 2, niter2 \\ 10) do
+
+  @default_solve_tolerance 1.0e-12
+  @default_max_stage1_iterations 2
+  @default_max_stage2_iterations 10
+
+  def solve(f, fd, guess, tol \\ @default_solve_tolerance, niter1 \\ @default_max_stage1_iterations, niter2 \\ @default_max_stage2_iterations) do
     with {:ok, lower_bound, upper_bound} <- Root.bracket(f, guess),
          {:ok, est, _iters1} <- Root.bisection(f, lower_bound, upper_bound, tol, niter1),
          {:ok, lower_bound, upper_bound} <- Root.bracket(f, est),

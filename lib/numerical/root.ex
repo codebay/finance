@@ -44,7 +44,11 @@ defmodule Finance.Numerical.Root do
       iex> Finance.Numerical.Root.bracket(f, -0.7)
       {:ok, -0.71, -0.6579999999999999}
   """
-  def bracket(f, guess, precision \\ 2) do
+
+  @default_bracket_precision 2
+  @bracket_step_size 1.6
+
+  def bracket(f, guess, precision \\ @default_bracket_precision) do
     dt = :math.pow(10.0, round(:math.log10(abs(guess == 0.0 && 1.0 || guess))) - precision)
     bracket_step(f, guess - dt, f.(guess - dt), guess + dt, f.(guess + dt), 10)
   end
@@ -58,12 +62,12 @@ defmodule Finance.Numerical.Root do
   end
 
   defp bracket_step(f, l, fl, u, fu, niter) when abs(fl) <  abs(fu) do
-    x = l + 1.6 * (l - u)
+    x = l + @bracket_step_size * (l - u)
     bracket_step(f, x, f.(x), u, fu, niter - 1)
   end
 
   defp bracket_step(f, l, fl, u, _fu, niter) do
-    x = u + 1.6 *(u - l)
+    x = u + @bracket_step_size *(u - l)
     bracket_step(f, l, fl, x, f.(x), niter - 1)
   end
 
@@ -97,8 +101,12 @@ defmodule Finance.Numerical.Root do
       iex> niter
       40
   """
-  def bisection(f, lower_bound, upper_bound, tolerance \\ 1.0e-12, niters \\ 41) when lower_bound < upper_bound do
-    est = (lower_bound + upper_bound) / 2
+
+  @default_bisection_tolerance 1.0e-12
+  @default_bisection_max_iterations 41
+
+  def bisection(f, lower_bound, upper_bound, tolerance \\ @default_bisection_tolerance, niters \\ @default_bisection_max_iterations) when lower_bound < upper_bound do
+    est = (lower_bound + upper_bound) / 2.0
 
     bisection(
       %Finance.Numerical.Iteration{
@@ -124,23 +132,20 @@ defmodule Finance.Numerical.Root do
   end
 
   defp bisection_step(%Finance.Numerical.Iteration{lower_bound: lower_bound, est: est, upper_bound: upper_bound, tol: tol, left: left})
-       when abs(upper_bound - lower_bound) <= tol do
+       when abs(upper_bound - lower_bound) <= tol, do:
     {:ok, est, left}
-  end
 
-  defp bisection_step(%Finance.Numerical.Iteration{est: est, left: 0}) do
+  defp bisection_step(%Finance.Numerical.Iteration{est: est, left: 0}), do:
     {:ok, est, 0}
-  end
 
-  defp bisection_step(%Finance.Numerical.Iteration{flower_bound: flower_bound, fupper_bound: fupper_bound}) when flower_bound * fupper_bound > 0 do
+  defp bisection_step(%Finance.Numerical.Iteration{flower_bound: flower_bound, fupper_bound: fupper_bound}) when flower_bound * fupper_bound > 0, do:
     {:error, "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
-  end
 
   defp bisection_step(
          iter = %Finance.Numerical.Iteration{f: f, flower_bound: flower_bound, est: est, fest: fest, upper_bound: upper_bound, left: left}
        )
-       when flower_bound * fest > 0 do
-    nest = (est + upper_bound) / 2
+       when flower_bound * fest > 0.0 do
+    nest = (est + upper_bound) / 2.0
 
     bisection_step(%Finance.Numerical.Iteration{
       iter
@@ -153,7 +158,7 @@ defmodule Finance.Numerical.Root do
   end
 
   defp bisection_step(iter = %Finance.Numerical.Iteration{f: f, lower_bound: lower_bound, est: est, fest: fest, left: left}) do
-    nest = (lower_bound + est) / 2
+    nest = (lower_bound + est) / 2.0
 
     bisection_step(%Finance.Numerical.Iteration{
       iter
@@ -187,8 +192,12 @@ defmodule Finance.Numerical.Root do
           iex> iters
           6
   """
-  def newton_raphson(f, fd, lower_bound, upper_bound, tolerance \\ 1.0e-12, niters \\ 10) when lower_bound < upper_bound do
-    est = (lower_bound + upper_bound) / 2
+
+  @default_newton_raphson_tolerance 1.0e-12
+  @default_newton_raphson_max_iterations 10
+
+  def newton_raphson(f, fd, lower_bound, upper_bound, tolerance \\ @default_newton_raphson_tolerance, niters \\ @default_newton_raphson_max_iterations) when lower_bound < upper_bound do
+    est = (lower_bound + upper_bound) / 2.0
     fest = f.(est)
 
     newton_raphson(
@@ -204,19 +213,16 @@ defmodule Finance.Numerical.Root do
         tol: tolerance,
         left: niters,
         dx: newton_raphson_dx(fest, fd.(est)),
-        pdx: (upper_bound - lower_bound) / 2
+        pdx: (upper_bound - lower_bound) / 2.0
       },
       niters
     )
   end
 
-  defp newton_raphson_dx(_fest, _fdest = 0.0) do
-    0.0
-  end
+  defp newton_raphson_dx(_fest, _fdest = 0.0), do: 0.0
 
-  defp newton_raphson_dx(fest, fdest) do
+  defp newton_raphson_dx(fest, fdest), do:
     fest / fdest
-  end
 
   defp newton_raphson(iter = %Finance.Numerical.Iteration{}, niters) do
     case newton_raphson_step(iter) do
@@ -226,23 +232,19 @@ defmodule Finance.Numerical.Root do
   end
 
   defp newton_raphson_step(%Finance.Numerical.Iteration{flower_bound: flower_bound, fupper_bound: fupper_bound})
-       when flower_bound * fupper_bound > 0 do
+       when flower_bound * fupper_bound > 0.0, do:
     {:error, "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
-  end
 
   defp newton_raphson_step(%Finance.Numerical.Iteration{lower_bound: lower_bound, est: est, upper_bound: upper_bound})
-       when (lower_bound - est) * (est - upper_bound) < 0 do
+       when (lower_bound - est) * (est - upper_bound) < 0.0, do:
     {:error, "stepped outside of initial bounds"}
-  end
 
   defp newton_raphson_step(%Finance.Numerical.Iteration{est: est, left: left, tol: tol, dx: dx})
-       when abs(dx) <= tol do
+       when abs(dx) <= tol, do:
     {:ok, est, left}
-  end
 
-  defp newton_raphson_step(%Finance.Numerical.Iteration{est: est, left: 0}) do
+  defp newton_raphson_step(%Finance.Numerical.Iteration{est: est, left: 0}), do:
     {:ok, est, 0}
-  end
 
   defp newton_raphson_step(iter = %Finance.Numerical.Iteration{f: f, fd: fd, est: est, dx: dx, left: left}) do
     nest = est - dx

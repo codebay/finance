@@ -103,7 +103,7 @@ defmodule Finance.CashFlow do
       80015.03
   """
   def npv(c, irr) do
-    f = 1 / (1 + irr)
+    f = 1.0 / (1.0 + irr)
 
     {npv, _} =
       Enum.reduce(c, {0.0, 1.0}, fn x, {s, fm} ->
@@ -125,7 +125,7 @@ defmodule Finance.CashFlow do
       -1025886.21
   """
   def dnpv(c, irr) do
-    f = 1 / (1 + irr)
+    f = 1.0 / (1.0 + irr)
 
     {dnpv, _, _} =
       Enum.reduce(c, {0.0, 0.0, f}, fn x, {s, i, fm} ->
@@ -138,7 +138,10 @@ defmodule Finance.CashFlow do
   @doc """
   Internal Rate of Return IRR
   """
-  def irr(c, guess \\ 0.1) do
+
+  @default_irr_guess 0.1
+
+  def irr(c, guess \\ @default_irr_guess) do
     npv = fn c ->
       fn i -> npv(c, i) end
     end
