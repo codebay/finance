@@ -1,6 +1,6 @@
 defmodule Finance.CashFlow do
   @moduledoc """
-  An annunity of n regular payments or receipts occuring at evenly spaced periods
+  An annuity of n regular payments or receipts occurring at evenly spaced periods
   can be represented by the cash flow:
   ```
   [c0, c1, c2, c3, ....., cn]
@@ -62,7 +62,7 @@ defmodule Finance.CashFlow do
   So the final payment will be need to be adjusted by 17p i.e. 207.67 - 0.17
    = £207.50 to compensate.
 
-  Now we have payments, a cashflow can be constructed
+  Now we have payments, a cash flow can be constructed
   ```
   c0  = -£7500                       advance
   c1  = c2 = 0.0                     2 months deferred payment
@@ -86,7 +86,7 @@ defmodule Finance.CashFlow do
   alias Finance.Numerical
 
   @doc """
-  Net Present Value of an arbitary cash flow
+  Net Present Value of an arbitrary cash flow
 
   ## Example
   From http://www.financeformulas.net/Net_Present_Value.html

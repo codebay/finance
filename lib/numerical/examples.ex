@@ -33,7 +33,7 @@ defmodule Finance.Numerical.Examples do
     3.0 * x * x - 2.0
 
   @doc """
-  The function 1 -x^2 has roots at +/-1, and upper_boundimum at 0. The zero derivative at
+  The function 1 -x^2 has roots at +/-1, and upper_bound maximum at 0. The zero derivative at
   0 leads division by zero and any iteration point close to 0 will lead to a far
   worse approximation.
   """

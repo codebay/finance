@@ -173,8 +173,8 @@ defmodule Finance.Numerical.Root do
   @doc """
   Newton Raphson method requires the evaluation of both the function f(x) and its derivative.
   The method can display a very rapid convergence to the root, however it can be become unstable
-  when the initial estimate is too close to any local lower_boundima or upper_boundima. There is also the
-  possiblity that the method can get trapped in a nonconvergent cycle.
+  when the initial estimate is too close to any local lower_bound or upper_bound minima. There is also the
+  possibility that the method can get trapped in a non-convergent cycle.
 
   ##Examples
       The function 3x^2+5x+2 = 0 has two roots at -1 and -2/3

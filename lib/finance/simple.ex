@@ -1,6 +1,6 @@
 defmodule Finance.Simple do
   @moduledoc """
-  For the simplified case series of regular payments the realtionship between the present value (pv),
+  For the simplified case series of regular payments the relationship between the present value (pv),
   future value (fv), payment (pmt) and rate (i) over a period of (n) time periods is given by:
   ```
                   pmt(1+i)
@@ -60,7 +60,7 @@ defmodule Finance.Simple do
     -(pmt * (1.0 + ((type && i) || 0.0)) * fvifa(i, n) + pv * fvif(i, n))
 
   @doc """
-  Payment aganist the loan principal plus interest
+  Payment against the loan principal plus interest
 
   If payments made at the end of the periods (default) type = true,
   else if payments are made at the beginning type = false.
