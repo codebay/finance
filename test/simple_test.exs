@@ -10,7 +10,7 @@ defmodule Finance.SimpleTest do
                       -100,
                       0.05 / Period.monthly(),
                       10 * Period.monthly(),
-                      15692.93,
+                      15_692.93,
                       true
                     ),
                     -60.72,
@@ -25,7 +25,7 @@ defmodule Finance.SimpleTest do
                       10 * Period.monthly(),
                       true
                     ),
-                    15692.93,
+                    15_692.93,
                     1.0e-2
   end
 
@@ -34,7 +34,7 @@ defmodule Finance.SimpleTest do
                       -60.72,
                       0.05 / Period.monthly(),
                       10 * Period.monthly(),
-                      15692.93,
+                      15_692.93,
                       true
                     ),
                     -100.0,
@@ -42,7 +42,7 @@ defmodule Finance.SimpleTest do
   end
 
   test "nper with payment at the start of the period" do
-    assert_in_delta Simple.nper(-60.72, -100, 0.05 / Period.monthly(), 15692.93, true),
+    assert_in_delta Simple.nper(-60.72, -100, 0.05 / Period.monthly(), 15_692.93, true),
                     120.0,
                     1.0e-2
   end
@@ -70,9 +70,8 @@ defmodule Finance.SimpleTest do
   test "rate with fv value" do
     pmt = Finance.Simple.pmt(-7500, 0.015123, 48, 2000)
 
-    with {:ok, rate} <- Finance.Simple.rate(-7500, pmt, 48, 2000) do
-      assert_in_delta rate, 0.015123, 1.0e-6
-    else
+    case Finance.Simple.rate(-7500, pmt, 48, 2000) do
+      {:ok, rate} -> assert_in_delta rate, 0.015123, 1.0e-6
       {:error, msg} -> flunk(msg)
     end
   end
@@ -80,9 +79,8 @@ defmodule Finance.SimpleTest do
   test "rate with fv value, and payment at the beginning of the periods" do
     pmt = Finance.Simple.pmt(-7500, 0.015123, 48, 2000, true)
 
-    with {:ok, rate} <- Finance.Simple.rate(-7500, pmt, 48, 2000, true) do
-      assert_in_delta Float.round(rate, 6), 0.015123, 1.0e-6
-    else
+    case Finance.Simple.rate(-7500, pmt, 48, 2000, true) do
+      {:ok, rate}  -> assert_in_delta Float.round(rate, 6), 0.015123, 1.0e-6
       {:error, msg} -> flunk(msg)
     end
   end

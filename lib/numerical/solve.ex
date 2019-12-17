@@ -1,7 +1,7 @@
 defmodule Finance.Numerical do
   alias Finance.Numerical.Root
 
-  @doc """
+  @moduledoc """
   Method for solving f(x) = 0
 
   Using a two phase method which has been tailored to find the internal rate of return from the
