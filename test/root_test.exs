@@ -7,22 +7,24 @@ defmodule Finance.Numerical.RootTest do
 
   test "bisection - root outside the bounds to the right" do
     assert Root.bisection(&Ex.f1/1, -3, -2) ==
-             {:error, "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
+             {:error,
+              "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
   end
 
   test "bisection - root outside the bounds to the left" do
     assert Root.bisection(&Ex.f1/1, 2, 5) ==
-             {:error, "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
+             {:error,
+              "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
   end
 
   test "bisection - bounds encompass two roots" do
     assert Root.bisection(&Ex.f1/1, -3, 2) ==
-             {:error, "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
+             {:error,
+              "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
   end
 
   test "bisection - maximum number of retries" do
-    {:ok, est, 2} =
-      Root.bisection(&Ex.f1/1, -0.9, 0, 1.0e-12, 2)
+    {:ok, est, 2} = Root.bisection(&Ex.f1/1, -0.9, 0, 1.0e-12, 2)
 
     assert Float.round(est, 4) == -0.5625
   end
@@ -32,8 +34,7 @@ defmodule Finance.Numerical.RootTest do
   # fd1(-0.7) = 6 * (-0.7) + 5 = 0.8
   # N(1) = (-0.7) - (-0.03)/0.8 = -0.6625
   test "newton raphson - maximum number of retries" do
-    {:ok, est, 1} =
-      Root.newton_raphson(&Ex.f1/1, &Ex.fd1/1, -0.8, -0.6, 1.0e-12, 1)
+    {:ok, est, 1} = Root.newton_raphson(&Ex.f1/1, &Ex.fd1/1, -0.8, -0.6, 1.0e-12, 1)
 
     assert Float.round(est, 4) == -0.6625
   end
@@ -45,7 +46,8 @@ defmodule Finance.Numerical.RootTest do
 
   test "newton raphson - iteration from stationary point" do
     assert Root.newton_raphson(&Ex.f3/1, &Ex.fd3/1, -2, 2, 1.0e-12, 10) ==
-             {:error, "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
+             {:error,
+              "lower_bound and upper_bound do not bracket a root, or possibly bracket multiple roots"}
   end
 
   test "newton raphson - iteration from a point close to a stationary point" do

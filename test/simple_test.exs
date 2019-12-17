@@ -73,16 +73,17 @@ defmodule Finance.SimpleTest do
     with {:ok, rate} <- Finance.Simple.rate(-7500, pmt, 48, 2000) do
       assert_in_delta rate, 0.015123, 1.0e-6
     else
-      {:error, msg} -> flunk msg
+      {:error, msg} -> flunk(msg)
     end
   end
 
   test "rate with fv value, and payment at the beginning of the periods" do
     pmt = Finance.Simple.pmt(-7500, 0.015123, 48, 2000, true)
+
     with {:ok, rate} <- Finance.Simple.rate(-7500, pmt, 48, 2000, true) do
       assert_in_delta Float.round(rate, 6), 0.015123, 1.0e-6
     else
-      {:error, msg} -> flunk msg
+      {:error, msg} -> flunk(msg)
     end
   end
 end

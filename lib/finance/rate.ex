@@ -15,14 +15,12 @@ defmodule Finance.Rate do
   """
   def irr2apr(_irr = 0, _t), do: 0.0
 
-  def irr2apr(irr, t), do:
-    (:math.pow(1.0 + irr, t) - 1.0) * 100.0
+  def irr2apr(irr, t), do: (:math.pow(1.0 + irr, t) - 1.0) * 100.0
 
   @doc """
   Convert APR to an internal rate of return, where t is the time period of the internal rate
   """
   def apr2irr(_apr = 0, _t), do: 0.0
 
-  def apr2irr(apr, t), do:
-    :math.pow(1.0 + apr / 100.0, 1.0 / t) - 1.0
+  def apr2irr(apr, t), do: :math.pow(1.0 + apr / 100.0, 1.0 / t) - 1.0
 end

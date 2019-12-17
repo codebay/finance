@@ -13,7 +13,14 @@ defmodule Finance.Numerical do
   @default_max_stage1_iterations 2
   @default_max_stage2_iterations 10
 
-  def solve(f, fd, guess, tol \\ @default_solve_tolerance, niter1 \\ @default_max_stage1_iterations, niter2 \\ @default_max_stage2_iterations) do
+  def solve(
+        f,
+        fd,
+        guess,
+        tol \\ @default_solve_tolerance,
+        niter1 \\ @default_max_stage1_iterations,
+        niter2 \\ @default_max_stage2_iterations
+      ) do
     with {:ok, lower_bound, upper_bound} <- Root.bracket(f, guess),
          {:ok, est, _iters1} <- Root.bisection(f, lower_bound, upper_bound, tol, niter1),
          {:ok, lower_bound, upper_bound} <- Root.bracket(f, est),
